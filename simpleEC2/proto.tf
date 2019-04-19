@@ -26,5 +26,8 @@ resource "aws_s3_bucket" "example" {
   acl    = "private"
 }
 
-
+resource "aws_instance" "anotherOne" {
+  ami           = "${lookup(var.amis, var.region)}"
+  instance_type = "t2.micro" 
+}
 
