@@ -1,0 +1,6 @@
+cluster_name: test.k8s.local
+state_store: s3://thomas-laird-kubernetes/kopsState
+vpc_id:  vpc-12a59a74
+vpc_cidr: 172.31.0.0/16
+zone: eu-west-1a
+subnet_id: subnet-ca285382

@@ -1,0 +1,82 @@
+apiVersion: kops/v1alpha2
+kind: Cluster
+metadata:
+  name: {{.cluster_name}}
+spec:
+  api:
+    loadBalancer:
+      type: Public
+  authorization:
+    rbac: {}
+  channel: stable
+  cloudProvider: aws
+  configBase: {{.state_store}}
+  etcdClusters:
+  - etcdMembers:
+    - instanceGroup: master-{{.cluster_name}}
+      name: a
+    name: main
+  - etcdMembers:
+    - instanceGroup: master-{{.cluster_name}}
+      name: a
+    name: events
+  iam:
+    allowContainerRegistry: true
+    legacy: false
+  kubernetesVersion: 1.10.6
+  kubernetesApiAccess:
+  - 0.0.0.0/0
+  masterInternalName: api.internal.{{.cluster_name}}
+  masterPublicName: api.{{.cluster_name}}
+  networkCIDR: {{.vpc_cidr}}
+  networkID: {{.vpc_id}}
+  networking:
+    canal: {}
+  nonMasqueradeCIDR: 100.64.0.0/10
+  sshAccess:
+  - 0.0.0.0/0
+  subnets:
+  - id: {{.subnet_id}}
+    name: cluster-{{.subnet_id}}
+    type: Public
+    zone: {{.zone}}
+  topology:
+    dns:
+      type: Public
+    masters: public
+    nodes: public
+
+---
+apiVersion: kops/v1alpha2
+kind: InstanceGroup
+metadata:
+  labels:
+    kops.k8s.io/cluster: {{.cluster_name}}
+  name: nodes
+spec:
+  image: ami-08d658f84a6d84a80
+  kubernetesVersion: 1.10.6
+  machineType: t2.nano
+  maxSize: 1
+  minSize: 1
+  role: Node
+  rootVolumeSize: 10
+  subnets:
+  - cluster-{{.subnet_id}}
+---
+apiVersion: kops/v1alpha2
+kind: InstanceGroup
+metadata:
+  labels:
+    kops.k8s.io/cluster: {{.cluster_name}}
+  name: master-{{.cluster_name}}
+spec:
+  image: ami-08d658f84a6d84a80
+  kubernetesVersion: 1.10.6
+  machineType: t2.medium
+  maxSize: 1
+  minSize: 1
+  role: Master
+  rootVolumeSize: 10
+  subnets:
+  - cluster-{{.subnet_id}}
