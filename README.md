@@ -4,7 +4,7 @@ The repository contains a couple of separate Terraform projects I have been work
 
 ## SimpleEC"
 
-The most basic provisioning of an instance in AWS. For future references added a few commands to add a private certificate authority into the list of trusted certificate authorities.
+The most basic provisioning of an instance in AWS. For future references added a few commands to add a private certificate authority to the list of certificate authorities trusted by the new instance.
 
 ## KopsBootstrap
 
